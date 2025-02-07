@@ -13,6 +13,7 @@ const typeDefs = `#graphql
     lat:String
     lng:String
   }
+
   type Company{
     name:String
     catchPhrase:String
@@ -43,6 +44,13 @@ const typeDefs = `#graphql
     completed: Boolean
   }
 
+  type Album{
+    id: ID
+    title: String
+    userId: ID
+    user: User
+  }
+
 
   type User {
     id: ID
@@ -55,6 +63,7 @@ const typeDefs = `#graphql
     company:Company
     todos: [Todo]
     posts: [Post]
+    albums: [Album]
   }
   
   type Comment{
@@ -76,6 +85,8 @@ const typeDefs = `#graphql
     post(id: ID): Post
     comment(id: ID): Comment
     comments: [Comment]
+    albums: [Album]
+    album(id: ID): Album
   }
 
 
@@ -120,6 +131,14 @@ const resolvers = {
             const {data} = await axios.get(`https://jsonplaceholder.typicode.com/comments`)
             return data
         },
+        albums: async()=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/albums`)
+            return data
+        },
+        album: async(parent:any,args:{id:number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/albums/${args.id}`)
+            return data
+        },
 
         
     },
@@ -146,6 +165,12 @@ const resolvers = {
             const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}/todos`);
             return data;
           },
+        albums: async (parent: any) => {
+            // Here, 'parent' is the User object that contains a 'userId' property.
+            const userId = parent.id;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}/albums`);
+            return data;
+          },
     },
 
 
@@ -165,6 +190,16 @@ const resolvers = {
             const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`);
             return data;
           }
+    },
+
+    Album: {
+        user: async(parent: any)=>{
+            // here parent is Album Type, consisting of the userId
+            const userId = parent.userId
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+            return data;
+
+        }
     }
 
 
