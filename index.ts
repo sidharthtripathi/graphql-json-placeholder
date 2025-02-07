@@ -49,6 +49,7 @@ const typeDefs = `#graphql
     title: String
     userId: ID
     user: User
+    photos: [Photo]
   }
 
 
@@ -75,6 +76,15 @@ const typeDefs = `#graphql
     post: Post
   }
 
+  type Photo{
+    id: ID
+    albumId: ID
+    album: Album
+    title: String
+    url: String
+    thumbnailUrl: String
+  }
+
 
   type Query {
     users: [User]
@@ -87,6 +97,8 @@ const typeDefs = `#graphql
     comments: [Comment]
     albums: [Album]
     album(id: ID): Album
+    photos: [Photo]
+    photo(id: ID) : Photo
   }
 
 
@@ -139,6 +151,15 @@ const resolvers = {
             const {data} = await axios.get(`https://jsonplaceholder.typicode.com/albums/${args.id}`)
             return data
         },
+        photos: async()=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/photos`)
+            return data
+        },
+        photo: async(parent: any, args: {id: number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/photos/${args.id}`)
+            return data
+        },
+
 
         
     },
@@ -199,8 +220,26 @@ const resolvers = {
             const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
             return data;
 
+        },
+        photos: async(parent: any)=>{
+            // here parent is Album Type, consisting of the its id (albumID)
+            const albumId = parent.id
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/albums/${albumId}/photos`);
+            return data;
+        },
+    },
+
+    Photo: {
+        album: async(parent: any)=>{
+            // here parent is Photo Type, consisting of the albumId
+            const albumId = parent.albumId
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/albums/${albumId}`);
+            return data;
+
         }
-    }
+    },
+
+  
 
 
 }
