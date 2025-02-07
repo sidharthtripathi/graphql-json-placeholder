@@ -10,95 +10,95 @@ const typeDefs = `#graphql
 
   # This "Book" type defines the queryable fields for every book in our data source.
   type Geo {
-    lat:String
-    lng:String
+    lat:String!
+    lng:String!
   }
 
   type Company{
-    name:String
-    catchPhrase:String
-    bs:String
+    name:String!
+    catchPhrase:String!
+    bs:String!
   }
   type Address {
-    street: String
-    city: String
-    suite: String
-    zipcode: String
-    geo: Geo
+    street: String!
+    city: String!
+    suite: String!
+    zipcode: String!
+    geo: Geo!
   }
 
   type Post{
-    user: User
-    userId: ID
-    id: ID
-    title: String
-    body: String
-    comments: [Comment]
+    user: User!
+    userId: ID!
+    id: ID!
+    title: String!
+    body: String!
+    comments: [Comment!]!
   }
 
   type Todo{
-    user: User
-    userId: ID
-    id: ID
-    title: String
-    completed: Boolean
+    user: User!
+    userId: ID!
+    id: ID!
+    title: String!
+    completed: Boolean!
   }
 
   type Album{
-    id: ID
-    title: String
-    userId: ID
-    user: User
-    photos: [Photo]
+    id: ID!
+    title: String!
+    userId: ID!
+    user: User!
+    photos: [Photo!]!
   }
 
 
   type User {
-    id: ID
-    name: String
-    username: String
-    email: String
-    address:Address
-    phone:String
-    website:String
-    company:Company
-    todos: [Todo]
-    posts: [Post]
-    albums: [Album]
+    id: ID!
+    name: String!
+    username: String!
+    email: String!
+    address:Address!
+    phone:String!
+    website:String!
+    company:Company!
+    todos: [Todo!]!
+    posts: [Post!]!
+    albums: [Album!]!
   }
   
   type Comment{
-    postId: ID
-    id: ID
-    name: String
-    email: String
-    body: String
-    post: Post
+    postId: ID!
+    id: ID!
+    name: String!
+    email: String!
+    body: String!
+    post: Post!
   }
 
   type Photo{
-    id: ID
-    albumId: ID
-    album: Album
-    title: String
-    url: String
-    thumbnailUrl: String
+    id: ID!
+    albumId: ID!
+    album: Album!
+    title: String!
+    url: String!
+    thumbnailUrl: String!
   }
 
 
   type Query {
-    users: [User]
-    user(id:ID): User
-    todos: [Todo]
-    todo(id: ID): Todo
-    posts: [Post]
-    post(id: ID): Post
-    comment(id: ID): Comment
-    comments: [Comment]
-    albums: [Album]
-    album(id: ID): Album
-    photos: [Photo]
-    photo(id: ID) : Photo
+    users: [User!]!
+    user(id:ID!): User!
+    todos: [Todo!]!
+    todo(id: ID!): Todo!
+    posts: [Post!]!
+    post(id: ID!): Post!
+    comment(id: ID!): Comment!
+    comments: [Comment!]
+    albums: [Album!]!
+    album(id: ID!): Album!
+    photos: [Photo!]!
+    photo(id: ID!) : Photo!
   }
 
 
