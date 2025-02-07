@@ -24,7 +24,14 @@ const typeDefs = `#graphql
     suite: String
     zipcode: String
     geo: Geo
+  }
 
+  type Post{
+    user: User
+    userId: ID
+    id: ID
+    title: String
+    body: String
   }
 
   type Todo{
@@ -45,6 +52,8 @@ const typeDefs = `#graphql
     phone:String
     website:String
     company:Company
+    todos: [Todo]
+    posts: [Post]
   }
 
 
@@ -53,6 +62,8 @@ const typeDefs = `#graphql
     user(id:ID): User
     todos: [Todo]
     todo(id: ID): Todo
+    posts: [Post]
+    post(id: ID): Post
   }
 
 
@@ -78,16 +89,55 @@ const resolvers = {
             const {data} = await axios.get(`https://jsonplaceholder.typicode.com/todos/${args.id}`)
             return data
         },
+
+        posts: async()=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/posts`)
+            return data
+        },
+
+        post: async(parent:any,args:{id:number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/posts/${args.id}`)
+            return data
+        },
+
+        
     },
 
     Todo: {
         user: async (parent: any) => {
-            // Here, 'parent' is the todo object that contains a 'userId' property.
+            // Here, 'parent' is the Todo object that contains a 'userId' property.
+            const userId = parent.userId;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+            return data;
+          }
+    },
+
+    User: {
+        posts: async (parent: any) => {
+            // Here, 'parent' is the User object that contains a 'userId' property.
+            const userId = parent.id;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}/posts`);
+            return data;
+          },
+        todos: async (parent: any) => {
+            // Here, 'parent' is the User object that contains a 'userId' property.
+            const userId = parent.id;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}/todos`);
+            return data;
+          },
+    },
+
+
+    Post: {
+        user: async (parent: any) => {
+            // Here, 'parent' is the Post object that contains a 'userId' property.
             const userId = parent.userId;
             const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
             return data;
           }
     }
+
+
 }
 
 
