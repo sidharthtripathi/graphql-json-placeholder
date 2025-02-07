@@ -32,6 +32,7 @@ const typeDefs = `#graphql
     id: ID
     title: String
     body: String
+    comments: [Comment]
   }
 
   type Todo{
@@ -55,6 +56,15 @@ const typeDefs = `#graphql
     todos: [Todo]
     posts: [Post]
   }
+  
+  type Comment{
+    postId: ID
+    id: ID
+    name: String
+    email: String
+    body: String
+    post: Post
+  }
 
 
   type Query {
@@ -64,6 +74,8 @@ const typeDefs = `#graphql
     todo(id: ID): Todo
     posts: [Post]
     post(id: ID): Post
+    comment(id: ID): Comment
+    comments: [Comment]
   }
 
 
@@ -100,6 +112,15 @@ const resolvers = {
             return data
         },
 
+        comment: async(parent:any,args:{id:number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/comments/${args.id}`)
+            return data
+        },
+        comments: async()=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/comments`)
+            return data
+        },
+
         
     },
 
@@ -133,6 +154,15 @@ const resolvers = {
             // Here, 'parent' is the Post object that contains a 'userId' property.
             const userId = parent.userId;
             const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+            return data;
+          }
+    },
+
+    Comment: {
+        post: async (parent: any) => {
+            // Here, 'parent' is the Comment object that contains a 'postId' property.
+            const postId = parent.postId;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/posts/${postId}`);
             return data;
           }
     }
