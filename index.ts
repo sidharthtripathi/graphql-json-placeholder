@@ -1,0 +1,101 @@
+import { ApolloServer } from '@apollo/server';
+import { startStandaloneServer } from '@apollo/server/standalone';
+import axios from 'axios';
+
+// A schema is a collection of type definitions (hence "typeDefs")
+// that together define the "shape" of queries that are executed against
+// your data.
+const typeDefs = `#graphql
+  # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
+
+  # This "Book" type defines the queryable fields for every book in our data source.
+  type Geo {
+    lat:String
+    lng:String
+  }
+  type Company{
+    name:String
+    catchPhrase:String
+    bs:String
+  }
+  type Address {
+    street: String
+    city: String
+    suite: String
+    zipcode: String
+    geo: Geo
+
+  }
+
+  type Todo{
+    user: User
+    userId: ID
+    id: ID
+    title: String
+    completed: Boolean
+  }
+
+
+  type User {
+    id: ID
+    name: String
+    username: String
+    email: String
+    address:Address
+    phone:String
+    website:String
+    company:Company
+  }
+
+
+  type Query {
+    users: [User]
+    user(id:ID): User
+    todos: [Todo]
+    todo(id: ID): Todo
+  }
+
+
+`;
+
+const resolvers = {
+    Query : {
+        users: async()=>{
+            const {data} = await axios.get("https://jsonplaceholder.typicode.com/users")
+            return data
+        },
+        user: async(parent : any,args : {id:number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/users/${args.id}`)
+            return data
+        },
+
+        todos : async()=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/todos`)
+            return data
+        },
+
+        todo: async(parent:any,args:{id:number})=>{
+            const {data} = await axios.get(`https://jsonplaceholder.typicode.com/todos/${args.id}`)
+            return data
+        },
+    },
+
+    Todo: {
+        user: async (parent: any) => {
+            // Here, 'parent' is the todo object that contains a 'userId' property.
+            const userId = parent.userId;
+            const { data } = await axios.get(`https://jsonplaceholder.typicode.com/users/${userId}`);
+            return data;
+          }
+    }
+}
+
+
+const server = new ApolloServer({
+    typeDefs,
+    resolvers
+})
+
+const {url} = await startStandaloneServer(server,{listen:{port : 3000}})
+
+console.log("server is up...")
