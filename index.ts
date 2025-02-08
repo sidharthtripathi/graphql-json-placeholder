@@ -4,7 +4,8 @@ import { typeDefs,allResolvers } from './graphql/query';
 
 const server = new ApolloServer({
     typeDefs,
-    resolvers:allResolvers
+    resolvers:allResolvers,
+    introspection : true,
 })
 
 const {url} = await startStandaloneServer(server,{listen:{port : 3000}})
