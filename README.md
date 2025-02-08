@@ -1,5 +1,7 @@
 # graphql
 
+### API Documentation available [Here](https://sidharthtripathi.github.io/json-placeholder-graphql-schema/)
+
 To install dependencies:
 
 ```bash
